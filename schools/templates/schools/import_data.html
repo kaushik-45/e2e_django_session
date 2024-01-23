@@ -1,0 +1,18 @@
+<html>
+  <head>
+      <title>Schools</title>
+  </head>
+  <body>
+      <h1>School Data</h1>
+      
+      <form method="post" >
+          {% csrf_token %}
+          <input type="submit" name="import_dataVal" value="import Data" formaction="{% url 'schools:import_csv' %}">
+          <input type="submit" name="make_dictionary" value="Total School" formaction="{% url 'schools:makeDictionary' %}">
+          <input type="submit" name="category" value="School category" formaction="{% url 'schools:schholCategory' %}">
+          <input type="submit" name="lanng" value="Languages per District" formaction="{% url 'schools:lamguageDist' %}">
+          
+      </form>
+  
+  </body>
+  </html>

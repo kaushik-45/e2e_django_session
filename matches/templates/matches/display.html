@@ -1,0 +1,61 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Match Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Match Data</h1>
+
+    <button onclick="goBack()">Go Back</button>
+    <br>
+    <br>
+
+    <canvas id="myChart" width="400" height="200"></canvas>
+
+    <script>
+        
+        var matchesData  = {{matches|safe}};
+        console.log(matchesData);  
+    
+        var ssn = matchesData.map(function(item){
+            return item.year;
+        });
+    
+        var matchPlay = matchesData.map(function(item){
+            return item.matches_played;
+        });
+    
+        var ctx = document.getElementById('myChart').getContext('2d');
+    
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ssn,
+                datasets: [{
+                    label: 'Number of Matches',
+                    data: matchPlay,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function goBack() {
+           
+            window.history.go(-1);
+        }
+    </script>
+    
+</body>
+</html>

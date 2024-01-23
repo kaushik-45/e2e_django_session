@@ -1,0 +1,57 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Total Schools</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>School Data</h1>
+    <button onclick="goBack()" >Go back</button> 
+    <canvas id="myChart" width="400" height="200"></canvas>
+
+    <script>
+        
+        var schoolsData  = {{schools|safe}};
+          
+    
+        var district = schoolsData.map(function(item){
+            return item.district;
+        });
+    
+        var count_of_schools = schoolsData.map(function(item){
+            return item.count_of_schools;
+        });
+    
+        var ctx = document.getElementById('myChart').getContext('2d');
+    
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: district,
+                datasets: [{
+                    label: 'Number of Schools',
+                    data: count_of_schools,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function goBack()
+        {
+            window.history.go(-1)
+        }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Languages</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Languages per district</h1>
+    <button onclick="goBack()" >Go back</button>
+    <canvas id="matchesWonChart" width="400" height="200"></canvas>
+
+    <script>
+      
+        var schoolData = {{ schools|safe }};
+
+        var dist = [...new Set(schoolData.map(item => item.district))];
+        var cat = [...new Set(schoolData.map(item => item.language))];
+        var data = {};
+
+        var teamColors = [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 0, 0, 0.2)',
+            'rgba(0, 255, 0, 0.2)',
+            'rgba(0, 0, 255, 0.2)',
+            'rgba(128, 0, 128, 0.2)',
+            'rgba(255, 140, 0, 0.2)',
+            'rgba(128, 128, 0, 0.2)',
+            'rgba(0, 128, 128, 0.2)',
+            'rgba(128, 0, 0, 0.2)',
+            'rgba(0, 128, 0, 0.2)',
+        ];
+
+        dist.forEach(dist => {
+            data[dist] = {};
+            cat.forEach((cat, index) => {
+                data[dist][cat] = {
+                    totalSchools: 0,
+                    color: teamColors[index],
+                };
+            });
+        });
+
+        schoolData.forEach(item => {
+            data[item.district][item.language].totalSchools = item.count_of_lang
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('matchesWonChart').getContext('2d');
+            var matchesWonChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dist,
+                    datasets: cat.map((cat, index) => ({
+                        label: cat,
+                        data: dist.map(dist => data[dist][cat].totalSchools),
+                        backgroundColor: teamColors[index],
+                        borderColor: 'rgba(255, 255, 255, 0)', 
+                        borderWidth: 1
+                    }))
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Schools '
+                            }
+                        },
+                        x: {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Language'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        function goBack(){
+            window.history.go(-1)
+        }
+    </script>
+</body>
+</html>

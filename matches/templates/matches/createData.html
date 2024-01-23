@@ -1,0 +1,17 @@
+<html>
+<head>
+    <title>Match</title>
+</head>
+<body>
+    <h1>IPL Matches</h1>
+    
+    <form method="post" >
+        {% csrf_token %}
+        <input type="submit" name="import_csv" value="import Data" formaction="{% url 'matches:import_csv' %}">
+        <input type="submit" name="make_dictionary" value="Matches Played" formaction="{% url 'matches:makeDictionary' %}">
+        <input type="submit" name="matches_won" value="Matches Won" formaction="{% url 'matches:matchesWon' %}">
+        
+    </form>
+
+</body>
+</html>

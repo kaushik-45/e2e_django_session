@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matches Won Per Season</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Matches Won Per Season</h1>
+
+<button onclick="goBack()">Go Back</button>
+    <br>
+    <br>
+
+    <canvas id="matchesWonChart" width="400" height="200"></canvas>
+
+    <script>
+        
+        var matchesData = {{ matches|safe }};
+
+        
+        var seasons = [...new Set(matchesData.map(item => item.year))];
+        var teams = [...new Set(matchesData.map(item => item.winner))];
+        var data = {};
+
+       
+        var teamColors = [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 0, 0, 0.2)',
+            'rgba(0, 255, 0, 0.2)',
+            'rgba(0, 0, 255, 0.2)',
+            'rgba(128, 0, 128, 0.2)',
+            'rgba(255, 140, 0, 0.2)',
+            'rgba(128, 128, 0, 0.2)',
+            'rgba(0, 128, 128, 0.2)',
+            'rgba(128, 0, 0, 0.2)',
+            'rgba(0, 128, 0, 0.2)',
+        ];
+
+       
+        seasons.forEach(season => {
+            data[season] = {};
+            teams.forEach((team, index) => {
+                data[season][team] = {
+                    totalMatches: 0,
+                    color: teamColors[index],
+                };
+            });
+        });
+
+       
+        matchesData.forEach(item => {
+            data[item.year][item.winner].totalMatches = item.matches_won;
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('matchesWonChart').getContext('2d');
+            var matchesWonChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: seasons,
+                    datasets: teams.map((team, index) => ({
+                        label: team,
+                        data: seasons.map(season => data[season][team].totalMatches),
+                        backgroundColor: teamColors[index],
+                        borderColor: 'rgba(255, 255, 255, 0)', // Transparent border
+                        borderWidth: 1
+                    }))
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Matches Won'
+                            }
+                        },
+                        x: {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Season'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        function goBack() {
+           
+            window.history.go(-1);
+        }
+    </script>
+</body>
+</html>
